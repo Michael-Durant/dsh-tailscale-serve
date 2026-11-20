@@ -1,0 +1,9 @@
+# Row inserted by the dsh-tailscale-serve bundle.
+# Configure in your profile's cordis.patch.yml instead of editing this file.
+- insert:
+    - id: ts-serve
+      name: dsh-tailscale-serve
+      config:
+        port: 8081
+        serve: true
+        allowUnpaired: false
