@@ -4,7 +4,7 @@
 
 不用端口映射、不用公网域名、不监听 `0.0.0.0`、也不自己再造一套登录鉴权。
 
-    ��机(Tailscale) ──tailnet WireGuard──▶ <tailnet IP>:8081
+    手机(Tailscale) ──tailnet WireGuard──▶ <tailnet IP>:8081
                                             │  裸 TCP 转发
                                             ▼
                                   127.0.0.1:<DSH 端口>  (DSH + 你选的配对门禁)
@@ -49,7 +49,9 @@ pnpm add dsh-tailscale-serve      # 或 npm i dsh-tailscale-serve
         allowUnpaired: false  # 保持 false：有门禁才暴露
 ```
 
-重启 DSH，日志会明确告诉你结果：
+重启 DSH。冷启动时插件可能要等一会儿：DSH 通常比 `tailscaled` 认证完成更早启动，前几次尝试会记 `no Tailscale IPv4 address yet` 并自动重试（默认 400 × 1.5 秒 ≈ 10 分钟）。由于桌面端看不到插件 stdout，日志同时写入 `~/.dsh/logs/dsh-tailscale-serve.log`。
+
+日志会明确告诉你结果：
 
 ```
 [dsh-tailscale-serve] forwarder listening on 100.79.98.33:8081 -> 127.0.0.1:51741
@@ -69,6 +71,8 @@ pnpm add dsh-tailscale-serve      # 或 npm i dsh-tailscale-serve
 | `tailscaleBin` | `""` | CLI 路径；空 = 自动探测 |
 | `maxConnections` | `64` | 并发连接上限 |
 | `retries` / `retryMs` | `6` / `3000` | `tailscale serve` 重试策略 |
+| `startAttempts` / `startRetryMs` | `400` / `1500` | 启动重试窗口（约 10 分钟）：DSH 与 Tailscale 各自独立启动，`tailscaled` 可能一段时间处于 `NoState` |
+| `logFile` | `""` | `""` = `~/.dsh/logs/dsh-tailscale-serve.log`；填路径可改位置；`false` 关闭文件日志 |
 
 ## 上手验证
 

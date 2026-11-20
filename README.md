@@ -49,7 +49,9 @@ Then add the bundle to the profile `package.json` and enable the row in `cordis.
         allowUnpaired: false  # keep false: refuse to expose a gated app
 ```
 
-Restart DSH. Log lines tell you exactly what happened:
+Restart DSH. On a cold boot the plugin may have to wait: DSH usually starts before `tailscaled` has finished authenticating, so the first attempts log `no Tailscale IPv4 address yet` and are retried (default 400 × 1.5 s ≈ 10 min). Everything is also appended to `~/.dsh/logs/dsh-tailscale-serve.log` because the desktop app hides plugin stdout.
+
+Log lines tell you exactly what happened:
 
 ```
 [dsh-tailscale-serve] forwarder listening on 100.79.98.33:8081 -> 127.0.0.1:51741
@@ -70,6 +72,8 @@ Restart DSH. Log lines tell you exactly what happened:
 | `tailscaleBin` | `""` | explicit CLI path; empty = auto-detect |
 | `maxConnections` | `64` | concurrent connection cap |
 | `retries` / `retryMs` | `6` / `3000` | `tailscale serve` retry policy |
+| `startAttempts` / `startRetryMs` | `400` / `1500` | startup retry window (~10 min): DSH and Tailscale boot independently, and `tailscaled` can report `NoState` for a while |
+| `logFile` | `""` | `""` = `~/.dsh/logs/dsh-tailscale-serve.log`; a path overrides it; `false` disables the file log |
 
 ## Verify before you trust it
 

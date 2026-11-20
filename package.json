@@ -1,6 +1,6 @@
 {
   "name": "dsh-tailscale-serve",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Expose the DSH web GUI on your Tailscale tailnet only — never 0.0.0.0, never the public internet.",
   "type": "module",
   "license": "MIT",
