@@ -45,7 +45,7 @@ Then add the bundle to the profile `package.json` and enable the row in `cordis.
       config:
         port: 8081            # tailnet-side port
         serve: true           # also publish https://<machine>.<tailnet>.ts.net
-        allowedPeers: []      # e.g. ["100.119.175.27"] to allow one phone
+        allowedPeers: []      # e.g. ["100.100.10.30"] to allow one phone
         allowUnpaired: false  # keep false: refuse to expose a gated app
 ```
 
@@ -54,9 +54,9 @@ Restart DSH. On a cold boot the plugin may have to wait: DSH usually starts befo
 Log lines tell you exactly what happened:
 
 ```
-[dsh-tailscale-serve] forwarder listening on 100.79.98.33:8081 -> 127.0.0.1:51741
+[dsh-tailscale-serve] forwarder listening on 100.100.10.20:8081 -> 127.0.0.1:51741
 [dsh-tailscale-serve] tailscale serve -> http://127.0.0.1:51741 (tailnet-only)
-[dsh-tailscale-serve] ready: http://100.79.98.33:8081  gate=paired  peers=any-tailnet-device
+[dsh-tailscale-serve] ready: http://100.100.10.20:8081  gate=paired  peers=any-tailnet-device
 ```
 
 ## Configuration
@@ -88,6 +88,12 @@ The self-check is read-only: it prints the CLI version, the tailnet address and 
 curl -i http://<tailnet ip>:8081/pair-app     # expect 200 when a gate is installed
 curl -i http://<tailnet ip>:8081/             # expect 401 from DSH core
 ```
+
+## More than one machine
+
+Running DSH on two or three of your own machines (desktop + laptop + phone) is the setup this plugin was written for, and it has its own failure modes: the pairing base must be the *tailnet* address rather than whatever adapter happens to sort first, a pairing link cannot be minted for a peer from another host, and a profile install under a live DSH silently unloads the running plugin. The field guide collects the topology, the order of steps, and eleven lessons learned the hard way:
+
+**[docs/MULTI-MACHINE.md](./docs/MULTI-MACHINE.md)** and [中文](./docs/MULTI-MACHINE.zh.md)
 
 ## FAQ
 

@@ -45,7 +45,7 @@ pnpm add dsh-tailscale-serve      # 或 npm i dsh-tailscale-serve
       config:
         port: 8081            # tailnet 侧端口
         serve: true           # 同时发布 https://<机器>.<tailnet>.ts.net
-        allowedPeers: []      # 例如 ["100.119.175.27"] 只放行手机
+        allowedPeers: []      # 例如 ["100.100.10.30"] 只放行手机
         allowUnpaired: false  # 保持 false：有门禁才暴露
 ```
 
@@ -54,8 +54,8 @@ pnpm add dsh-tailscale-serve      # 或 npm i dsh-tailscale-serve
 日志会明确告诉你结果：
 
 ```
-[dsh-tailscale-serve] forwarder listening on 100.79.98.33:8081 -> 127.0.0.1:51741
-[dsh-tailscale-serve] ready: http://100.79.98.33:8081  gate=paired  peers=any-tailnet-device
+[dsh-tailscale-serve] forwarder listening on 100.100.10.20:8081 -> 127.0.0.1:51741
+[dsh-tailscale-serve] ready: http://100.100.10.20:8081  gate=paired  peers=any-tailnet-device
 ```
 
 ## 配置项
@@ -86,6 +86,12 @@ node scripts/selfcheck.js --port <DSH 端口>
 curl -i http://<tailnet IP>:8081/pair-app     # 装了门禁应返回 200
 curl -i http://<tailnet IP>:8081/             # DSH 核心应返回 401
 ```
+
+## 多台机器之间
+
+桌面 + 笔记本 + 手机，每台各跑一个 DSH、彼此互通——这正是本插件的目标场景，而它有自己的一批坑：配对基址必须钉在 *tailnet* 地址上（而不是排序最前的网卡）、配对链接不能跨机替对方生成、DSH 运行时做 profile 安装会悄悄卸载正在跑的插件。经验文档把拓扑、操作顺序和十一条踩坑教训整理在一起：
+
+**[docs/MULTI-MACHINE.zh.md](./docs/MULTI-MACHINE.zh.md)** 与 [English](./docs/MULTI-MACHINE.md)
 
 ## 常见问题
 
